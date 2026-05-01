@@ -59,17 +59,28 @@ with menu[1]:
         if submit:
             if name and phone:
                 try:
-                    df = conn.read()
-                    lat = DISTRICT_DATA[district]["lat"]
-                    lon = DISTRICT_DATA[district]["lon"]
+                    # 1. පවතින දත්ත කියවීම (Cache මකන්න ttl=0 දාලා තියෙන්නේ)
+                    df = conn.read(ttl=0)
                     
+                    # 2. අලුත් පෙළ සැකසීම
                     new_entry = pd.DataFrame([{
                         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "නම": name, "දුරකථන_අංකය": phone, "කණ්ඩායම": batch,
-                        "දිස්ත්‍රික්කය": district, "තත්ත්වය": "Pending", "lat": lat, "lon": lon
+                        "නම": name, 
+                        "දුරකථන_අංකය": phone, 
+                        "කණ්ඩායම": batch,
+                        "දිස්ත්‍රික්කය": district, 
+                        "තත්ත්වය": "Pending", 
+                        "lat": DISTRICT_DATA[district]["lat"], 
+                        "lon": DISTRICT_DATA[district]["lon"]
                     }])
                     
-                    updated_df = pd.concat([df, new_entry], ignore_index=True)
+                    # 3. දත්ත එකතු කිරීම
+                    if df is not None and not df.empty:
+                        updated_df = pd.concat([df, new_entry], ignore_index=True)
+                    else:
+                        updated_df = new_entry
+                    
+                    # 4. Sheet එකට යැවීම
                     conn.update(data=updated_df)
                     
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
@@ -78,7 +89,9 @@ with menu[1]:
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
                     st.download_button(
                         label="📥 ශිෂ්‍යයාගේ Contact එක Save කරගන්න මෙතන ඔබන්න",
-                        data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard"
+                        data=vcf_data, 
+                        file_name=f"{name}_BC.vcf", 
+                        mime="text/vcard"
                     )
                     st.balloons()
                 except Exception as e:
@@ -89,11 +102,16 @@ with menu[1]:
 with menu[2]:
     st.subheader("ලියාපදිංචි වී ඇති ශිෂ්‍ය ව්‍යාප්තිය")
     try:
-        data = conn.read()
-        if not data.empty and 'lat' in data.columns:
-            st.map(data[['lat', 'lon']])
-    except:
-        st.info("තවම සිතියමේ පෙන්වීමට දත්ත නොමැත.")
+        # Cache එක refresh කරන්න ttl=0
+        data = conn.read(ttl=0)
+        if data is not None and not data.empty and 'lat' in data.columns:
+            # සිතියම ඇඳීමට අවශ්‍ය Columns පමණක් තෝරා ගැනීම
+            map_df = data[['lat', 'lon']].dropna()
+            st.map(map_df)
+        else:
+            st.info("තවම සිතියමේ පෙන්වීමට දත්ත නොමැත. කරුණාකර පළමුව ලියාපදිංචි වන්න.")
+    except Exception as e:
+        st.error(f"සිතියම පෙන්වීමේදී දෝෂයක් ඇති විය: {e}")
 
 with menu[3]:
     st.subheader("නිබන්ධන (Tutes)")
