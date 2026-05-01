@@ -12,7 +12,7 @@ st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered
 WHATSAPP_GROUPS = {
     "2026 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
     "2027 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
-    "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK"
+    "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6AJ0uqUFNvTuK"
 }
 
 # 3. දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා)
