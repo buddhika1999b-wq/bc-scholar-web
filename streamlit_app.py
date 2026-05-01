@@ -4,18 +4,18 @@ import pandas as pd
 from datetime import datetime
 import urllib.parse
 
-# 1. පිටුවේ මූලික සැකසුම් (Page Config)
+# 1. පිටුවේ මූලික සැකසුම්
 icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
 st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
 
-# 2. WhatsApp Group Links (Batch-wise)
+# 2. WhatsApp Group Links
 WHATSAPP_GROUPS = {
     "2026 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
     "2027 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
-    "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6AJ0uqUFNvTuK"
+    "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK"
 }
 
-# 3. දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා)
+# 3. දිස්ත්‍රික්ක වල ඛණ්ඩාංක
 DISTRICT_DATA = {
     "කොළඹ": {"lat": 6.9271, "lon": 79.8612}, "මහනුවර": {"lat": 7.2906, "lon": 80.6337},
     "ගාල්ල": {"lat": 6.0535, "lon": 80.2210}, "මාතර": {"lat": 5.9549, "lon": 80.5550},
@@ -31,14 +31,14 @@ DISTRICT_DATA = {
     "කිලිනොච්චිය": {"lat": 9.3803, "lon": 80.4037}, "යාපනය": {"lat": 9.6615, "lon": 80.0255}
 }
 
-# 4. Google Sheet Connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# 5. CSS (Design & Styles)
+# 4. CSS (අලුත්ම Styles සහ Fonts සමඟ)
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
     
+    /* මුළු App එකටම පොදු සැකසුම් */
     .stApp {{
         background: linear-gradient(rgba(255, 249, 230, 0.85), rgba(255, 249, 230, 0.85)), 
                     url("https://wallpapercave.com/wp/nQ6UHTJ.jpg");
@@ -46,6 +46,7 @@ st.markdown(f"""
         background-attachment: fixed;
     }}
 
+    /* ප්‍රධාන මාතෘකාව (BC-Scholar) */
     .main-title {{
         font-family: 'Kotta One', serif;
         color: #800000;
@@ -56,26 +57,46 @@ st.markdown(f"""
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }}
 
+    /* උප මාතෘකාව */
     .sub-title {{
         font-family: 'Yaldevi', sans-serif;
         color: #e67e22;
         text-align: center;
         font-size: clamp(16px, 4vw, 24px);
-        font-weight: bold;
+        font-weight: 700;
         margin-bottom: 30px;
     }}
 
+    /* සාමාන්‍ය පන්ති සහ ලේබල් වල ෆොන්ට් එක */
+    .stMarkdown, p, label, .stSelectbox, .stTextInput {{
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 500 !important;
+        color: #4b2c20 !important;
+    }}
+
+    /* Tabs වල ෆොන්ට් සහ ස්ටයිල් */
+    .stTabs [data-baseweb="tab-list"] {{
+        justify-content: center;
+    }}
+    .stTabs [data-baseweb="tab"] {{
+        background-color: rgba(253, 242, 233, 0.9);
+        border-radius: 10px 10px 0px 0px;
+        padding: 10px 15px;
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 700 !important;
+    }}
+
+    /* බොත්තම් (Buttons) */
     .stButton>button {{
         width: 100%;
-        font-family: 'Yaldevi', sans-serif;
+        font-family: 'Yaldevi', sans-serif !important;
         background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
         color: white;
         border-radius: 15px;
         height: 55px;
-        font-weight: 700;
+        font-weight: 700 !important;
         border: none;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        transition: 0.3s;
     }}
     
     .stButton>button:hover {{
@@ -83,45 +104,36 @@ st.markdown(f"""
         box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }}
 
-    .centered-image {{
-        display: flex;
-        justify-content: center;
-        margin-bottom: 10px;
-    }}
-    
-    img {{
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }}
+    .centered-image {{ display: flex; justify-content: center; margin-bottom: 10px; }}
+    img {{ border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }}
     </style>
     """, unsafe_allow_html=True)
 
-# 6. Header Section
+# 5. Header
 st.markdown(f'<div class="centered-image"><img src="{icon_url}" width="70"></div>', unsafe_allow_html=True)
 st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
-# 7. Navigation Tabs
+# 6. Navigation
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
     st.image("https://as1.ftcdn.net/v2/jpg/02/28/97/24/1000_F_228972453_OnAkAPSw9RmGPh1ryLoB6znIoPgST5wh.jpg", use_container_width=True)
     st.markdown("""
-    ### ආයුබෝවන්!
-    බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට **BC-Scholar** ඩිජිටල් පද්ධතිය ඔබට උදව් වනු ඇත. 
+    <div style='font-family: "Yaldevi", sans-serif; font-size: 18px;'>
+    <br><b>ආයුබෝවන්!</b><br>
+    බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට <b>BC-Scholar</b> ඩිජිටල් පද්ධතිය ඔබට උදව් වනු ඇත.<br><br>
+    <b>ගුරු මෙහෙයවීම :</b><br>
+    <b>බුද්ධික සම්පත්</b> - B.Sc (Hons) in GIS, University of Peradeniya
+    </div>
+    """, unsafe_allow_html=True)
     
-    **ගුරු මෙහෙයවීම :**
-    **බුද්ධික සම්පත්** - B.Sc (Hons) in GIS, University of Peradeniya
-    """)
-    
-    # Contact Teacher
     contact_msg = urllib.parse.quote("ආයුබෝවන් සර්, මට පන්ති පිළිබඳ විස්තර දැනගැනීමට අවශ්‍යයි.")
     st.link_button("📞 Contact Teacher (WhatsApp)", f"https://wa.me/94779316692?text={contact_msg}")
 
 with menu[1]:
-    # Form එක උඩ තියෙන ලස්සන image එක
     st.image("https://khiri.com/wp-content/uploads/2023/03/SLFeb23-Sigiriya-10.jpg", use_container_width=True)
-    st.markdown("<h3 style='color: #800000; text-align: center;'>නව ශිෂ්‍ය ලියාපදිංචිය</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>නව ශිෂ්‍ය ලියාපදිංචිය</h3>", unsafe_allow_html=True)
     
     with st.form("registration_form", clear_on_submit=True):
         name = st.text_input("සම්පූර්ණ නම")
@@ -146,38 +158,34 @@ with menu[1]:
                     st.balloons()
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
                     
-                    # ලියාපදිංචි වුණ ගමන් අදාළ Batch එකේ Group එක පෙන්වීම
-                    st.markdown(f"#### ✅ දැන් පහත බටන් එකෙන් ඔබේ {batch_selection} සමූහයට එකතු වන්න:")
+                    st.markdown(f"<div style='font-family: \"Yaldevi\", sans-serif;'><h4>✅ දැන් පහත බටන් එකෙන් ඔබේ {batch_selection} සමූහයට එකතු වන්න:</h4></div>", unsafe_allow_html=True)
                     st.link_button(f"Join {batch_selection} WhatsApp Group", WHATSAPP_GROUPS[batch_selection])
                     
-                    # Contact Card එක Download කිරීමට දීම
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
                     st.download_button(label="📥 Contact එක Save කරගන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
                 except:
-                    st.error("දත්ත ඇතුළත් කිරීමේදී දෝෂයක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.")
+                    st.error("දත්ත ඇතුළත් කිරීමේදී දෝෂයක් ඇති විය.")
             else:
                 st.warning("කරුණාකර සියලු විස්තර සම්පූර්ණ කරන්න.")
 
 with menu[2]:
     st.image("https://th.bing.com/th/id/R.e22f34a07b8c8586a30e1a89fb7cc4bb?rik=Dy2JkwTUd4EkVw&pid=ImgRaw&r=0", use_container_width=True)
-    st.markdown("<h3 style='color: #800000; text-align: center;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
     try:
         data = conn.read(ttl=0)
         if data is not None and not data.empty:
             st.map(data[['lat', 'lon']].dropna(), color="#800000")
     except:
-        st.error("සිතියම පූරණය කිරීමේදී දෝෂයක් ඇති විය.")
+        st.error("සිතියම පූරණය කළ නොහැක.")
 
 with menu[3]:
-    st.subheader("📚 නිබන්ධන (Tutes)")
-    pw = st.text_input("මෙම කොටසට ඇතුළු වීමට මුරපදය (Password) ඇතුළත් කරන්න", type="password")
+    st.markdown("<div style='font-family: \"Yaldevi\", sans-serif;'><h3>📚 නිබන්ධන (Tutes)</h3></div>", unsafe_allow_html=True)
+    pw = st.text_input("මුරපදය ඇතුළත් කරන්න", type="password")
     if pw == "BC123":
-        st.success("මුරපදය නිවැරදියි! පහත ලින්ක් එකෙන් නිබන්ධන ලබාගන්න.")
+        st.success("Access Granted!")
         st.link_button("Download Tutes (Google Drive)", "https://drive.google.com/drive/folders/1MoGZVGhnEvv-sBwwivd9mIeU-Tybu8uL?usp=drive_link")
-    elif pw != "":
-        st.error("මුරපදය වැරදියි! කරුණාකර නිවැරදි මුරපදය ඇතුළත් කරන්න.")
 
 with menu[4]:
-    st.subheader("🎥 සජීවී Zoom පන්ති")
-    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට පහත බොත්තම හරහා සම්බන්ධ වන්න.")
-    st.link_button("සජීවී Zoom පන්තියට මෙතනින් එක්වන්න", "https://zoom.us")
+    st.markdown("<div style='font-family: \"Yaldevi\", sans-serif;'><h3>🎥 සජීවී Zoom පන්ති</h3></div>", unsafe_allow_html=True)
+    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට පහත බොත්තම භාවිතා කරන්න.")
+    st.link_button("සජීවී Zoom පන්තියට මෙතනින්", "https://zoom.us")
