@@ -25,38 +25,34 @@ DISTRICT_DATA = {
 # Google Sheet Connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# CSS - පෙනුම ලස්සන කිරීම (UI/UX)
+# CSS - පෙනුම ලස්සන කිරීම
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@700&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
     
-    /* මුළු පිටුවේම අකුරු */
     html, body, [class*="css"] {
         font-family: 'Noto Sans Sinhala', sans-serif;
         background-color: #fffaf5;
     }
 
-    /* ප්‍රධාන මාතෘකාව */
     .main-title {
         font-family: 'Abhaya Libre', serif;
         color: #800000;
         text-align: center;
-        font-size: 55px;
+        font-size: clamp(35px, 8vw, 55px);
         font-weight: bold;
         margin-bottom: 0px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* උප මාතෘකාව */
     .sub-title {
         color: #e67e22;
         text-align: center;
-        font-size: 22px;
+        font-size: clamp(16px, 4vw, 22px);
         font-weight: bold;
         margin-bottom: 30px;
     }
 
-    /* Button ලස්සන කිරීම */
     .stButton>button {
         width: 100%;
         background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
@@ -64,45 +60,30 @@ st.markdown("""
         border-radius: 15px;
         height: 55px;
         font-weight: bold;
-        font-size: 18px;
         border: none;
-        transition: 0.3s;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     
-    .stButton>button:hover {
-        background: linear-gradient(90deg, #a52a2a 0%, #800000 100%);
-        transform: translateY(-2px);
-    }
-
-    /* Tabs ලස්සන කිරීම */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        background-color: #fdf2e9;
-        border-radius: 10px 10px 0px 0px;
-        padding: 10px 20px;
-        font-weight: bold;
+    /* Image එක හරියට මැදට පේන්න */
+    .stImage > img {
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Header කොටස
+# Header
 st.markdown('<p class="main-title">☸️ BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
-    # වඩාත් ගුණාත්මක පින්තූරයක් (රුවන්වැලිසෑය)
-    st.image("https://images.unsplash.com/photo-1625034606410-68196603a95d?q=80&w=1200&auto=format&fit=crop", use_container_width=True)
+    # රුවන්වැලිසෑය පින්තූරය (අලුත් ලින්ක් එකක්)
+    st.image("https://p0.pikist.com/download/883/409/1018/sri-lanka-anuradhapura-ruwanwelisaya-stupa-buddhism-temple-religion-monument-architecture.jpg", caption="ඓතිහාසික රුවන්වැලි මහා සෑ රජුන්", use_container_width=True)
     st.markdown("""
     ### ආයුබෝවන්!
     බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට **BC-Scholar** ඩිජිටල් පද්ධතිය ඔබට උදව් වනු ඇත. 
-    අප සමඟ එක්ව විෂය කරුණු ඉතා පැහැදිලිව ඉගෙන ගන්න.
     """)
     st.link_button("Official WhatsApp Group එකට මෙතනින් එක්වන්න", "https://chat.whatsapp.com/LInK_HeRe")
 
@@ -121,32 +102,16 @@ with menu[1]:
                     df = conn.read(ttl=0)
                     new_entry = pd.DataFrame([{
                         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "නම": name, 
-                        "දුරකථන_අංකය": phone, 
-                        "කණ්ඩායම": batch,
-                        "දිස්ත්‍රික්කය": district, 
-                        "තත්ත්වය": "Pending", 
-                        "lat": DISTRICT_DATA[district]["lat"], 
-                        "lon": DISTRICT_DATA[district]["lon"]
+                        "නම": name, "දුරකථන_අංකය": phone, "කණ්ඩායම": batch,
+                        "දිස්ත්‍රික්කය": district, "තත්ත්වය": "Pending", 
+                        "lat": DISTRICT_DATA[district]["lat"], "lon": DISTRICT_DATA[district]["lon"]
                     }])
-                    
-                    if df is not None and not df.empty:
-                        updated_df = pd.concat([df, new_entry], ignore_index=True)
-                    else:
-                        updated_df = new_entry
-                    
+                    updated_df = pd.concat([df, new_entry], ignore_index=True) if df is not None and not df.empty else new_entry
                     conn.update(data=updated_df)
-                    
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
                     
-                    # VCF Contact System
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
-                    st.download_button(
-                        label="📥 ශිෂ්‍යයාගේ Contact එක Save කරගන්න මෙතන ඔබන්න",
-                        data=vcf_data, 
-                        file_name=f"{name}_BC.vcf", 
-                        mime="text/vcard"
-                    )
+                    st.download_button(label="📥 ශිෂ්‍යයාගේ Contact එක Save කරන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
                     st.balloons()
                 except Exception as e:
                     st.error(f"Error: {e}")
@@ -158,12 +123,11 @@ with menu[2]:
     try:
         data = conn.read(ttl=0)
         if data is not None and not data.empty and 'lat' in data.columns:
-            map_df = data[['lat', 'lon']].dropna()
-            st.map(map_df, color="#800000")
+            st.map(data[['lat', 'lon']].dropna(), color="#800000")
         else:
             st.info("තවම සිතියමේ පෙන්වීමට දත්ත නොමැත.")
-    except Exception as e:
-        st.error(f"සිතියම පෙන්වීමේදී දෝෂයක් ඇති විය.")
+    except:
+        st.error("දත්ත කියවීමේ දෝෂයකි.")
 
 with menu[3]:
     st.subheader("📚 නිබන්ධන (Tutes)")
@@ -174,5 +138,4 @@ with menu[3]:
 
 with menu[4]:
     st.subheader("🎥 සජීවී Zoom පන්ති")
-    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට ලින්ක් එක සක්‍රීය වේ.")
     st.link_button("සජීවී Zoom පන්තියට මෙතනින් සම්බන්ධ වන්න", "https://zoom.us")
