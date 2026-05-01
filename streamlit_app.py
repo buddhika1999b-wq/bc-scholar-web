@@ -25,28 +25,31 @@ DISTRICT_DATA = {
 # Google Sheet Connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# CSS - Background Color සහ Style සැකසීම
+# CSS - පෙනුම, Background එක සහ සිංහල Fonts Styles
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@700&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&family=Abhaya+Libre:wght@700&display=swap');
     
-    /* Background එක වෙනස් කිරීම */
+    /* මුළු App එකේම Background එක Cream පාට කිරීම */
     .stApp {
-        background-color: #fff9e6; /* ලා කහ/ක්රීම් පාට */
+        background-color: #fff9e6; 
     }
 
-    html, body, [class*="css"] {
-        font-family: 'Noto Sans Sinhala', sans-serif;
-    }
-
+    /* ප්‍රධාන මාතෘකාවට 'Kotta One' ෆොන්ට් එක */
     .main-title {
-        font-family: 'Abhaya Libre', serif;
+        font-family: 'Kotta One', serif;
         color: #800000;
         text-align: center;
-        font-size: clamp(35px, 8vw, 60px);
+        font-size: clamp(35px, 8vw, 65px);
         font-weight: bold;
         margin-bottom: 0px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* උප මාතෘකාවට සහ අනෙකුත් අකුරු වලට 'Yaldevi' ෆොන්ට් එක */
+    .sub-title, .stMarkdown, p, label, .stSelectbox {
+        font-family: 'Yaldevi', sans-serif;
+        font-weight: 500;
     }
 
     .sub-title {
@@ -57,21 +60,26 @@ st.markdown("""
         margin-bottom: 30px;
     }
 
+    /* Button එක ලස්සන කිරීම */
     .stButton>button {
         width: 100%;
+        font-family: 'Yaldevi', sans-serif;
         background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
         color: white;
         border-radius: 15px;
         height: 55px;
-        font-weight: bold;
+        font-weight: 700;
         border: none;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: 0.3s;
     }
     
     .stButton>button:hover {
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
+    /* Tabs වල අකුරු */
     .stTabs [data-baseweb="tab-list"] {
         justify-content: center;
     }
@@ -80,6 +88,7 @@ st.markdown("""
         background-color: #fdf2e9;
         border-radius: 10px 10px 0px 0px;
         padding: 10px 15px;
+        font-family: 'Yaldevi', sans-serif;
         font-weight: bold;
     }
 
@@ -90,7 +99,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Header
+# Header කොටස
 st.markdown('<p class="main-title">☸️ BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
@@ -130,34 +139,37 @@ with menu[1]:
                     updated_df = pd.concat([df, new_entry], ignore_index=True) if df is not None and not df.empty else new_entry
                     conn.update(data=updated_df)
                     
-                    # සාර්ථක පණිවිඩය සහ Balloons!
+                    # ලියාපදිංචි වූ පසු Balloons සහ Success Message එක
                     st.balloons()
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
                     
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
                     st.download_button(label="📥 Contact එක Save කරගන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
                 except Exception as e:
-                    st.error("දෝෂයක් ඇති විය. පසුව උත්සාහ කරන්න.")
+                    st.error("දත්ත ඇතුළත් කිරීමේදී දෝෂයක් ඇති විය.")
             else:
-                st.warning("නම සහ අංකය ඇතුළත් කරන්න.")
+                st.warning("කරුණාකර නම සහ දුරකථන අංකය ඇතුළත් කරන්න.")
 
 with menu[2]:
     st.image("https://th.bing.com/th/id/R.e22f34a07b8c8586a30e1a89fb7cc4bb?rik=Dy2JkwTUd4EkVw&pid=ImgRaw&r=0", use_container_width=True)
-    st.markdown("<h3 style='color: #800000; text-align: center;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #800000; text-align: center;'>ශිෂ්‍ය ව්‍යාප්තිය (Live Map)</h3>", unsafe_allow_html=True)
     try:
         data = conn.read(ttl=0)
         if data is not None and not data.empty:
             st.map(data[['lat', 'lon']].dropna(), color="#800000")
+        else:
+            st.info("තවම සිතියමේ පෙන්වීමට දත්ත නොමැත.")
     except:
         st.error("දත්ත පූරණය කළ නොහැක.")
 
 with menu[3]:
     st.subheader("📚 නිබන්ධන (Tutes)")
-    pw = st.text_input("මුරපදය", type="password")
+    pw = st.text_input("මුරපදය ඇතුළත් කරන්න", type="password")
     if pw == "BC123":
-        st.success("Access Granted!")
-        st.link_button("Download Tute", "https://docs.google.com/your-tute-link")
+        st.success("මුරපදය නිවැරදියි!")
+        st.link_button("Download Tute (PDF)", "https://docs.google.com/your-tute-link")
 
 with menu[4]:
     st.subheader("🎥 සජීවී Zoom පන්ති")
-    st.link_button("Zoom පන්තියට මෙතනින්", "https://zoom.us")
+    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට ලින්ක් එක සක්‍රීය වේ.")
+    st.link_button("සජීවී Zoom පන්තියට මෙතනින්", "https://zoom.us")
