@@ -3,7 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 
-# පිටුවේ සැකසුම් - පින්තූරය Icon එකක් ලෙස භාවිතා කිරීම
+# පිටුවේ සැකසුම්
 icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
 st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
 
@@ -26,12 +26,11 @@ DISTRICT_DATA = {
 # Google Sheet Connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# CSS - පෙනුම, Background පින්තූරය සහ Fonts
+# CSS
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
     
-    /* Background පින්තූරය සැකසීම (Transparent ගතියක් සමඟ) */
     .stApp {{
         background: linear-gradient(rgba(255, 249, 230, 0.85), rgba(255, 249, 230, 0.85)), 
                     url("https://wallpapercave.com/wp/nQ6UHTJ.jpg");
@@ -39,13 +38,13 @@ st.markdown(f"""
         background-attachment: fixed;
     }}
 
-    /* මාතෘකා සහ අනෙකුත් ලේබල් */
     .main-title {{
         font-family: 'Kotta One', serif;
         color: #800000;
         text-align: center;
         font-size: clamp(35px, 8vw, 65px);
         font-weight: bold;
+        margin-top: -20px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }}
 
@@ -63,7 +62,6 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
 
-    /* Button Style */
     .stButton>button {{
         width: 100%;
         font-family: 'Yaldevi', sans-serif;
@@ -81,7 +79,6 @@ st.markdown(f"""
         box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }}
 
-    /* Tabs Style */
     .stTabs [data-baseweb="tab-list"] {{
         justify-content: center;
     }}
@@ -98,14 +95,18 @@ st.markdown(f"""
         border-radius: 15px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }}
+
+    /* මැදට ගැනීම සඳහා CSS */
+    .centered-image {{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0px;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-# Header
-col1, col2, col3 = st.columns([1,3,1])
-with col2:
-    st.image(icon_url, width=100) # ධර්මචක්‍රය Header එකට එකතු කිරීම
-
+# Header කොටස - මැදට සහ කුඩාවට
+st.markdown(f'<div class="centered-image"><img src="{icon_url}" width="70"></div>', unsafe_allow_html=True)
 st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
