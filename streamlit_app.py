@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 # පිටුවේ සැකසුම්
-st.set_page_config(page_title="BC-scholar", page_icon="☸️", layout="centered")
+st.set_page_config(page_title="BC-Scholar", page_icon="☸️", layout="centered")
 
 # දිස්ත්‍රික්ක වල ඛණ්ඩාංක (සිතියම සඳහා)
 DISTRICT_DATA = {
@@ -36,7 +36,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-title">☸️ BC-scholar</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">☸️ BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - ඩිජිටල් අධ්‍යාපන පද්ධතිය</p>', unsafe_allow_html=True)
 
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
