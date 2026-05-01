@@ -16,8 +16,8 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap');
     html, body, [class*="css"]  { font-family: 'Noto Sans Sinhala', sans-serif; }
     .stButton>button { width: 100%; background-color: #800000; color: white; border-radius: 10px; height: 50px; font-weight: bold; }
-    .main-title { color: #800000; text-align: center; font-size: 45px; font-weight: bold; margin-bottom: 0px; }
-    .sub-title { color: #ff9933; text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+    .main-title { color: #800000; text-align: center; font-size: 40px; font-weight: bold; margin-bottom: 0px; }
+    .sub-title { color: #ff9933; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -27,7 +27,8 @@ st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
-    st.image("https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1000", width=None)
+    # Error එක එන තැන Fix කළා - width='stretch' මඟින්
+    st.image("https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1000", width='stretch')
     st.write("### ආයුබෝවන්!")
     st.write("බෞද්ධ ශිෂ්ටාචාරය විෂය සරලව ඉගෙන ගැනීමට BC-scholar වෙත සම්බන්ධ වන්න.")
 
@@ -43,8 +44,11 @@ with menu[1]:
         if submit:
             if name and phone:
                 try:
+                    # පවතින දත්ත කියවීම
+                    df = conn.read(spreadsheet=url)
+                    
                     # අලුත් දත්ත පේළිය
-                    new_entry = pd.DataFrame([{
+                    new_data = pd.DataFrame([{
                         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         "නම": name,
                         "දුරකථන_අංකය": phone,
@@ -53,8 +57,11 @@ with menu[1]:
                         "තත්ත්වය": "Pending"
                     }])
                     
-                    # Sheet එකට කෙලින්ම ලියන්න උත්සාහ කිරීම
-                    conn.create(spreadsheet=url, data=new_entry)
+                    # දත්ත දෙක එකතු කිරීම
+                    updated_df = pd.concat([df, new_data], ignore_index=True)
+                    
+                    # Update කිරීම
+                    conn.update(spreadsheet=url, data=updated_df)
                     st.success("සාර්ථකව ලියාපදිංචි වුණා!")
                     st.balloons()
                 except Exception as e:
