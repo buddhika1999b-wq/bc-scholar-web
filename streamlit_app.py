@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 # පිටුවේ සැකසුම්
-st.set_page_config(page_title="BC-scholar", page_icon="☸️", layout="centered")
+st.set_page_config(page_title="BC-Scholar", page_icon="☸️", layout="centered")
 
 # දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා)
 DISTRICT_DATA = {
