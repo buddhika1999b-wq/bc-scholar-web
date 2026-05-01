@@ -10,7 +10,7 @@ st.set_page_config(page_title="BC-scholar", page_icon="☸️", layout="centered
 url = "https://docs.google.com/spreadsheets/d/1p4TNbQ2wAHd9Ug9Uh2YXP3TL_i2NVFNnD0GGchhfAVE/edit?usp=sharing"
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# CSS - සිංහල අකුරු ලස්සනට පෙන්වීමට
+# CSS - Branding
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap');
@@ -24,14 +24,12 @@ st.markdown("""
 st.markdown('<p class="main-title">☸️ BC-scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - ඩිජිටල් අධ්‍යාපන පද්ධතිය</p>', unsafe_allow_html=True)
 
-# Tabs
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
-    st.image("https://images.unsplash.com/photo-1590059447767-6f139accf48d?auto=format&fit=crop&q=80&w=1000", caption="BC-scholar - පණ්ඩිතයන්ගේ තේරීම", use_container_width=True)
+    st.image("https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1000", width=None)
     st.write("### ආයුබෝවන්!")
     st.write("බෞද්ධ ශිෂ්ටාචාරය විෂය සරලව ඉගෙන ගැනීමට BC-scholar වෙත සම්බන්ධ වන්න.")
-    st.link_button("Official WhatsApp Group", "https://chat.whatsapp.com/LInK_HeRe")
 
 with menu[1]:
     st.subheader("නව ශිෂ්‍ය ලියාපදිංචිය")
@@ -39,16 +37,24 @@ with menu[1]:
         name = st.text_input("සම්පූර්ණ නම")
         phone = st.text_input("WhatsApp දුරකථන අංකය")
         batch = st.selectbox("විභාග වර්ෂය", ["2026 A/L", "2027 A/L", "2028 A/L"])
-        district = st.selectbox("දිස්ත්‍රික්කය", ["කොළඹ", "මහනුවර", "ගාල්ල", "මාතර", "කුරුණෑගල", "අනුරාධපුර", "රත්නපුර", "කළුතර", "වෙනත්"])
+        district = st.selectbox("දිස්ත්‍රික්කය", ["කොළඹ", "මහනුවර", "ගාල්ල", "මාතර", "කුරුණෑගල", "අනුරාධපුර", "වෙනත්"])
         submit = st.form_submit_button("දත්ත ඇතුළත් කරන්න")
         
         if submit:
             if name and phone:
                 try:
-                    df = conn.read(spreadsheet=url)
-                    new_entry = pd.DataFrame([{"Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "නම": name, "දුරකථන_අංකය": phone, "කණ්ඩායම": batch, "දිස්ත්‍රික්කය": district, "තත්ත්වය": "Pending"}])
-                    updated_df = pd.concat([df, new_entry], ignore_index=True)
-                    conn.update(spreadsheet=url, data=updated_df)
+                    # අලුත් දත්ත පේළිය
+                    new_entry = pd.DataFrame([{
+                        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "නම": name,
+                        "දුරකථන_අංකය": phone,
+                        "කණ්ඩායම": batch,
+                        "දිස්ත්‍රික්කය": district,
+                        "තත්ත්වය": "Pending"
+                    }])
+                    
+                    # Sheet එකට කෙලින්ම ලියන්න උත්සාහ කිරීම
+                    conn.create(spreadsheet=url, data=new_entry)
                     st.success("සාර්ථකව ලියාපදිංචි වුණා!")
                     st.balloons()
                 except Exception as e:
@@ -61,7 +67,6 @@ with menu[2]:
     pw = st.text_input("මුරපදය", type="password")
     if pw == "BC123":
         st.success("අනුමතයි!")
-        st.link_button("Download Unit 01", "https://docs.google.com/your-link")
 
 with menu[3]:
     st.subheader("සජීවී පන්ති")
