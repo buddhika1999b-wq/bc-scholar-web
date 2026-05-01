@@ -4,13 +4,13 @@ import pandas as pd
 from datetime import datetime
 import urllib.parse
 
-# --- 1. පින්තූර වල නිවැරදි ImgBB Direct Links ---
-# ImgBB එකේ Direct links භාවිතා කර ඇති බැවින් Private Repository එකකදී වුවද පින්තූර දර්ශනය වේ.
-img_home_url = "https://i.ibb.co/gkJGDyp/home-png.png"
-img_reg_url = "https://i.ibb.co/g2sXCTk/reg-png.png"
-img_map_url = "https://i.ibb.co/cXbB5yhm/map-png.png"
-img_class_url = "https://i.ibb.co/vCSW91t7/class-png.png"
-img_back_url = "https://i.ibb.co/9HZ7J5nY/bg-png.png"
+# --- 1. පින්තූර වල නිවැරදි links (AI Generated) ---
+# ඔයා හොයාගත්තු නිවැරදි links ටික මෙන්න මේ විදියට variable වලට දැම්මා
+img_home_url = "https://github.com/buddhika1999b-wq/bc-scholar-web/blob/main/home.png.png?raw=true"
+img_reg_url = "https://github.com/buddhika1999b-wq/bc-scholar-web/blob/main/reg.png.png?raw=true"
+img_map_url = "https://github.com/buddhika1999b-wq/bc-scholar-web/blob/main/map.png.png?raw=true"
+img_class_url = "https://github.com/buddhika1999b-wq/bc-scholar-web/blob/main/class.png.png?raw=true"
+img_back_url = "https://github.com/buddhika1999b-wq/bc-scholar-web/blob/main/bg.png?raw=true"
 
 # --- 2. පිටුවේ මූලික සැකසුම් ---
 icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
@@ -43,10 +43,12 @@ DISTRICT_DATA = {
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # --- 6. CSS (Design & Styles) ---
+# මෙතන url() එක ඇතුළට img_back_url එක දාලා background එක transparent කළා
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
     
+    /* මුළු App එකේම Background එක (Transparent සහ Fixed) */
     .stApp {{
         background: linear-gradient(rgba(255, 249, 230, 0.85), rgba(255, 249, 230, 0.85)), 
                     url("{img_back_url}");
@@ -54,6 +56,7 @@ st.markdown(f"""
         background-attachment: fixed;
     }}
 
+    /* ප්‍රධාන මාතෘකාව (BC-Scholar) */
     .main-title {{
         font-family: 'Kotta One', serif;
         color: #800000;
@@ -64,6 +67,7 @@ st.markdown(f"""
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }}
 
+    /* උප මාතෘකාව */
     .sub-title {{
         font-family: 'Yaldevi', sans-serif;
         color: #e67e22;
@@ -73,12 +77,14 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
 
+    /* පන්ති සහ ලේබල් වල ෆොන්ට් එක */
     .stMarkdown, p, label, .stSelectbox, .stTextInput {{
         font-family: 'Yaldevi', sans-serif !important;
         font-weight: 500 !important;
         color: #4b2c20 !important;
     }}
 
+    /* Tabs (මුල් පිටුව, ලියාපදිංචිය) */
     .stTabs [data-baseweb="tab-list"] {{
         justify-content: center;
     }}
@@ -90,6 +96,7 @@ st.markdown(f"""
         font-weight: 700 !important;
     }}
 
+    /* බොත්තම් (Buttons) */
     .stButton>button {{
         width: 100%;
         font-family: 'Yaldevi', sans-serif !important;
@@ -108,6 +115,7 @@ st.markdown(f"""
         box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }}
 
+    /* පින්තූර මැදට ගැනීම සහ Shadow */
     .centered-image {{
         display: flex;
         justify-content: center;
@@ -130,6 +138,7 @@ st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
+    # මුල් පිටුවේ පින්තූරය (img_home_url)
     st.image(img_home_url, use_container_width=True)
     st.markdown("""
     <div style='font-family: "Yaldevi", sans-serif; font-size: 18px;'>
@@ -140,10 +149,12 @@ with menu[0]:
     </div>
     """, unsafe_allow_html=True)
     
+    # Contact Teacher
     contact_msg = urllib.parse.quote("ආයුබෝවන් සර්, මට පන්ති පිළිබඳ විස්තර දැනගැනීමට අවශ්‍යයි.")
     st.link_button("📞 Contact Teacher (WhatsApp)", f"https://wa.me/94779316692?text={contact_msg}")
 
 with menu[1]:
+    # ලියාපදිංචි පිටුවේ පින්තූරය (img_reg_url)
     st.image(img_reg_url, use_container_width=True)
     st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>නව ශිෂ්‍ය ලියාපදිංචිය</h3>", unsafe_allow_html=True)
     
@@ -157,28 +168,40 @@ with menu[1]:
         if submit:
             if name and phone:
                 try:
+                    # Google Sheet එක කියවීම
                     df = conn.read(ttl=0)
+                    # නව දත්ත
                     new_entry = pd.DataFrame([{
                         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         "නම": name, "දුරකථන_අංකය": phone, "කණ්ඩායම": batch_selection,
                         "දිස්ත්‍රික්කය": district, "තත්ත්වය": "Pending", 
                         "lat": DISTRICT_DATA[district]["lat"], "lon": DISTRICT_DATA[district]["lon"]
                     }])
+                    # දත්ත එකතු කිරීම
                     updated_df = pd.concat([df, new_entry], ignore_index=True) if df is not None and not df.empty else new_entry
+                    # Google Sheet එක Update කිරීම
                     conn.update(data=updated_df)
                     
                     st.balloons()
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
+                    
+                    st.markdown(f"<div style='font-family: \"Yaldevi\", sans-serif;'><h4>✅ දැන් පහත බටන් එකෙන් ඔබේ {batch_selection} සමූහයට එකතු වන්න:</h4></div>", unsafe_allow_html=True)
                     st.link_button(f"Join {batch_selection} WhatsApp Group", WHATSAPP_GROUPS[batch_selection])
+                    
+                    # Contact Card (VCF)
+                    vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
+                    st.download_button(label="📥 Contact එක Save කරගන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
                 except:
                     st.error("දත්ත ඇතුළත් කිරීමේදී දෝෂයක් ඇති විය.")
             else:
                 st.warning("කරුණාකර සියලු විස්තර සම්පූර්ණ කරන්න.")
 
 with menu[2]:
+    # සිතියම් පිටුවේ පින්තූරය (img_map_url)
     st.image(img_map_url, use_container_width=True)
     st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
     try:
+        # දත්ත කියවා සිතියම පෙන්වීම
         data = conn.read(ttl=0)
         if data is not None and not data.empty:
             st.map(data[['lat', 'lon']].dropna(), color="#800000")
@@ -193,6 +216,7 @@ with menu[3]:
         st.link_button("Download Tutes (Google Drive)", "https://drive.google.com/drive/folders/1MoGZVGhnEvv-sBwwivd9mIeU-Tybu8uL?usp=drive_link")
 
 with menu[4]:
+    # පන්ති පිටුවේ පින්තූරය (img_class_url)
     st.image(img_class_url, use_container_width=True)
     st.markdown("<div style='font-family: \"Yaldevi\", sans-serif;'><h3>🎥 සජීවී Zoom පන්ති</h3></div>", unsafe_allow_html=True)
     st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට පහත බොත්තම භාවිතා කරන්න.")
