@@ -3,8 +3,9 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 
-# පිටුවේ සැකසුම්
-st.set_page_config(page_title="BC-Scholar", page_icon="☸️", layout="centered")
+# පිටුවේ සැකසුම් - පින්තූරය Icon එකක් ලෙස භාවිතා කිරීම
+icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
+st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
 
 # දිස්ත්‍රික්ක වල ඛණ්ඩාංක
 DISTRICT_DATA = {
@@ -25,43 +26,45 @@ DISTRICT_DATA = {
 # Google Sheet Connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# CSS - පෙනුම, Background එක සහ සිංහල Fonts Styles
-st.markdown("""
+# CSS - පෙනුම, Background පින්තූරය සහ Fonts
+st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&family=Abhaya+Libre:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
     
-    /* මුළු App එකේම Background එක Cream පාට කිරීම */
-    .stApp {
-        background-color: #fff9e6; 
-    }
+    /* Background පින්තූරය සැකසීම (Transparent ගතියක් සමඟ) */
+    .stApp {{
+        background: linear-gradient(rgba(255, 249, 230, 0.85), rgba(255, 249, 230, 0.85)), 
+                    url("https://wallpapercave.com/wp/nQ6UHTJ.jpg");
+        background-size: cover;
+        background-attachment: fixed;
+    }}
 
-    /* ප්‍රධාන මාතෘකාවට 'Kotta One' ෆොන්ට් එක */
-    .main-title {
+    /* මාතෘකා සහ අනෙකුත් ලේබල් */
+    .main-title {{
         font-family: 'Kotta One', serif;
         color: #800000;
         text-align: center;
         font-size: clamp(35px, 8vw, 65px);
         font-weight: bold;
-        margin-bottom: 0px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
+    }}
 
-    /* උප මාතෘකාවට සහ අනෙකුත් අකුරු වලට 'Yaldevi' ෆොන්ට් එක */
-    .sub-title, .stMarkdown, p, label, .stSelectbox {
+    .sub-title, .stMarkdown, p, label, .stSelectbox {{
         font-family: 'Yaldevi', sans-serif;
         font-weight: 500;
-    }
+        color: #4b2c20;
+    }}
 
-    .sub-title {
+    .sub-title {{
         color: #e67e22;
         text-align: center;
         font-size: clamp(16px, 4vw, 24px);
         font-weight: bold;
         margin-bottom: 30px;
-    }
+    }}
 
-    /* Button එක ලස්සන කිරීම */
-    .stButton>button {
+    /* Button Style */
+    .stButton>button {{
         width: 100%;
         font-family: 'Yaldevi', sans-serif;
         background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
@@ -71,36 +74,39 @@ st.markdown("""
         font-weight: 700;
         border: none;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        transition: 0.3s;
-    }
+    }}
     
-    .stButton>button:hover {
+    .stButton>button:hover {{
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
+    }}
 
-    /* Tabs වල අකුරු */
-    .stTabs [data-baseweb="tab-list"] {
+    /* Tabs Style */
+    .stTabs [data-baseweb="tab-list"] {{
         justify-content: center;
-    }
+    }}
 
-    .stTabs [data-baseweb="tab"] {
-        background-color: #fdf2e9;
+    .stTabs [data-baseweb="tab"] {{
+        background-color: rgba(253, 242, 233, 0.9);
         border-radius: 10px 10px 0px 0px;
         padding: 10px 15px;
         font-family: 'Yaldevi', sans-serif;
         font-weight: bold;
-    }
+    }}
 
-    img {
+    img {{
         border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-# Header කොටස
-st.markdown('<p class="main-title">☸️ BC-Scholar</p>', unsafe_allow_html=True)
+# Header
+col1, col2, col3 = st.columns([1,3,1])
+with col2:
+    st.image(icon_url, width=100) # ධර්මචක්‍රය Header එකට එකතු කිරීම
+
+st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
@@ -138,38 +144,33 @@ with menu[1]:
                     }])
                     updated_df = pd.concat([df, new_entry], ignore_index=True) if df is not None and not df.empty else new_entry
                     conn.update(data=updated_df)
-                    
-                    # ලියාපදිංචි වූ පසු Balloons සහ Success Message එක
                     st.balloons()
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
                     
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
                     st.download_button(label="📥 Contact එක Save කරගන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
-                except Exception as e:
+                except:
                     st.error("දත්ත ඇතුළත් කිරීමේදී දෝෂයක් ඇති විය.")
             else:
-                st.warning("කරුණාකර නම සහ දුරකථන අංකය ඇතුළත් කරන්න.")
+                st.warning("කරුණාකර විස්තර සම්පූර්ණ කරන්න.")
 
 with menu[2]:
     st.image("https://th.bing.com/th/id/R.e22f34a07b8c8586a30e1a89fb7cc4bb?rik=Dy2JkwTUd4EkVw&pid=ImgRaw&r=0", use_container_width=True)
-    st.markdown("<h3 style='color: #800000; text-align: center;'>ශිෂ්‍ය ව්‍යාප්තිය (Live Map)</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #800000; text-align: center;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
     try:
         data = conn.read(ttl=0)
         if data is not None and not data.empty:
             st.map(data[['lat', 'lon']].dropna(), color="#800000")
-        else:
-            st.info("තවම සිතියමේ පෙන්වීමට දත්ත නොමැත.")
     except:
-        st.error("දත්ත පූරණය කළ නොහැක.")
+        st.error("සිතියම පූරණය කළ නොහැක.")
 
 with menu[3]:
     st.subheader("📚 නිබන්ධන (Tutes)")
-    pw = st.text_input("මුරපදය ඇතුළත් කරන්න", type="password")
+    pw = st.text_input("මුරපදය", type="password")
     if pw == "BC123":
-        st.success("මුරපදය නිවැරදියි!")
+        st.success("Access Granted!")
         st.link_button("Download Tute (PDF)", "https://docs.google.com/your-tute-link")
 
 with menu[4]:
     st.subheader("🎥 සජීවී Zoom පන්ති")
-    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට ලින්ක් එක සක්‍රීය වේ.")
     st.link_button("සජීවී Zoom පන්තියට මෙතනින්", "https://zoom.us")
