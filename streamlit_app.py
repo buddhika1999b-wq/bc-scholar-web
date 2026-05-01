@@ -4,13 +4,13 @@ import pandas as pd
 from datetime import datetime
 import urllib.parse
 
-# --- 1. පින්තූර වල Direct Links (ImgBB Direct Links) ---
-# Repository එක Private වුණත් මේ ලින්ක් වැඩ කරනවා
-img_home_url = "https://i.ibb.co/KzVpXGZ1/home-png.png"
-img_reg_url = "https://i.ibb.co/pYdg328/reg-png.png"
-img_map_url = "https://i.ibb.co/Qj8gBJv5/map-png.png"
-img_class_url = "https://i.ibb.co/jN7xFMn/class-png.png"
-img_back_url = "https://i.ibb.co/ymrC203w/bg.png"
+# --- 1. පින්තූර වල නිවැරදි ImgBB Direct Links ---
+# ImgBB එකේ Direct links භාවිතා කර ඇති බැවින් Private Repository එකකදී වුවද පින්තූර දර්ශනය වේ.
+img_home_url = "https://i.ibb.co/gkJGDyp/home-png.png"
+img_reg_url = "https://i.ibb.co/g2sXCTk/reg-png.png"
+img_map_url = "https://i.ibb.co/cXbB5yhm/map-png.png"
+img_class_url = "https://i.ibb.co/vCSW91t7/class-png.png"
+img_back_url = "https://i.ibb.co/9HZ7J5nY/bg-png.png"
 
 # --- 2. පිටුවේ මූලික සැකසුම් ---
 icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
@@ -195,4 +195,5 @@ with menu[3]:
 with menu[4]:
     st.image(img_class_url, use_container_width=True)
     st.markdown("<div style='font-family: \"Yaldevi\", sans-serif;'><h3>🎥 සජීවී Zoom පන්ති</h3></div>", unsafe_allow_html=True)
+    st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට පහත බොත්තම භාවිතා කරන්න.")
     st.link_button("සජීවී Zoom පන්තියට මෙතනින්", "https://zoom.us")
