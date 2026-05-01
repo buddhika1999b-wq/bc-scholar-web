@@ -56,7 +56,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-title">☸️ BC-scholar</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">☸️ BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - ඩිජිටල් අධ්‍යාපන පද්ධතිය</p>', unsafe_allow_html=True)
 
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
@@ -64,7 +64,7 @@ menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදි
 with menu[0]:
     st.image("https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1000", width=700)
     st.write("### ආයුබෝවන්!")
-    st.write("බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට BC-scholar පද්ධතිය ඔබට උදව් වනු ඇත.")
+    st.write("බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට BC-Scholar පද්ධතිය ඔබට උදව් වනු ඇත.")
     st.link_button("Official WhatsApp Group", "https://chat.whatsapp.com/LInK_HeRe")
 
 with menu[1]:
