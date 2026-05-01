@@ -4,18 +4,30 @@ import pandas as pd
 from datetime import datetime
 import urllib.parse
 
-# 1. පිටුවේ මූලික සැකසුම්
+# --- 1. පින්තූර ලින්ක්ස් (AI Generated) ---
+# මුල් පිටුවේ පින්තූරය (හිමිනම සහ ශිෂ්‍යයා)
+img_home_url = "https://github.com/B Buddika/BC-Scholar-Assets/raw/main/image_0.png"
+# ලියාපදිංචි පෝරමයට ඉහළින් පින්තූරය (දොරටුව සහ නෙළුම් පොකුණ)
+img_reg_url = "https://github.com/B Buddika/BC-Scholar-Assets/raw/main/image_2.png"
+# සිතියමට ඉහළින් පින්තූරය (රන්වන් ධර්මචක්‍රය සහිත සිතියම)
+img_map_url = "https://github.com/B Buddika/BC-Scholar-Assets/raw/main/image_4.png"
+# පන්ති ටැබ් එකට ඉහළින් පින්තූරය (මණ්ඩපයේ Laptop එකක්)
+img_class_url = "https://github.com/B Buddika/BC-Scholar-Assets/raw/main/image_6.png"
+# පසුබිම් පින්තූරය (බුදුරජාණන් වහන්සේගේ රැස් වළල්ල සහිත)
+img_back_url = "https://github.com/B Buddika/BC-Scholar-Assets/raw/main/image_10.png"
+
+# --- 2. පිටුවේ මූලික සැකසුම් ---
 icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
 st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
 
-# 2. WhatsApp Group Links
+# --- 3. WhatsApp Group Links (ඔයා දුන්න ලින්ක්ස්) ---
 WHATSAPP_GROUPS = {
     "2026 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
     "2027 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
     "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK"
 }
 
-# 3. දිස්ත්‍රික්ක වල ඛණ්ඩාංක
+# --- 4. දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා) ---
 DISTRICT_DATA = {
     "කොළඹ": {"lat": 6.9271, "lon": 79.8612}, "මහනුවර": {"lat": 7.2906, "lon": 80.6337},
     "ගාල්ල": {"lat": 6.0535, "lon": 80.2210}, "මාතර": {"lat": 5.9549, "lon": 80.5550},
@@ -31,17 +43,19 @@ DISTRICT_DATA = {
     "කිලිනොච්චිය": {"lat": 9.3803, "lon": 80.4037}, "යාපනය": {"lat": 9.6615, "lon": 80.0255}
 }
 
+# --- 5. Google Sheet Connection ---
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# 4. CSS (අලුත්ම Styles සහ Fonts සමඟ)
+# --- 6. CSS (Styles & Design) ---
+# මෙතන background image ලින්ක් එක අපි හදාගත්ත එකට වෙනස් කළා
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
     
-    /* මුළු App එකටම පොදු සැකසුම් */
+    /* මුළු App එකේම Background එක (AI Generated Image එක සමඟ) */
     .stApp {{
-        background: linear-gradient(rgba(255, 249, 230, 0.85), rgba(255, 249, 230, 0.85)), 
-                    url("https://wallpapercave.com/wp/nQ6UHTJ.jpg");
+        background: linear-gradient(rgba(255, 249, 230, 0.9), rgba(255, 249, 230, 0.9)), 
+                    url("{img_back_url}");
         background-size: cover;
         background-attachment: fixed;
     }}
@@ -67,14 +81,14 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
 
-    /* සාමාන්‍ය පන්ති සහ ලේබල් වල ෆොන්ට් එක */
+    /* සිංහල අකුරු ස්ටයිල් */
     .stMarkdown, p, label, .stSelectbox, .stTextInput {{
         font-family: 'Yaldevi', sans-serif !important;
         font-weight: 500 !important;
         color: #4b2c20 !important;
     }}
 
-    /* Tabs වල ෆොන්ට් සහ ස්ටයිල් */
+    /* Tabs (මුල් පිටුව, ලියාපදිංචිය) */
     .stTabs [data-baseweb="tab-list"] {{
         justify-content: center;
     }}
@@ -97,6 +111,7 @@ st.markdown(f"""
         font-weight: 700 !important;
         border: none;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: 0.3s;
     }}
     
     .stButton>button:hover {{
@@ -104,21 +119,341 @@ st.markdown(f"""
         box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }}
 
-    .centered-image {{ display: flex; justify-content: center; margin-bottom: 10px; }}
-    img {{ border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }}
+    /* පින්තූර මැදට ගැනීම සහ Shadow */
+    .centered-image {{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }}
+    
+    img {{
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-# 5. Header
+# --- 7. Header Section ---
 st.markdown(f'<div class="centered-image"><img src="{icon_url}" width="70"></div>', unsafe_allow_html=True)
 st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
 
-# 6. Navigation
+# --- 8. Navigation Tabs ---
 menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
 
 with menu[0]:
-    st.image("https://as1.ftcdn.net/v2/jpg/02/28/97/24/1000_F_228972453_OnAkAPSw9RmGPh1ryLoB6znIoPgST5wh.jpg", use_container_width=True)
+    st.image(img_home_url, use_container_width=True)
+    st.markdown("""
+    <div style='font-family: "Yaldevi", sans-serif; font-size: 18px;'>
+    <br><b>ආයුබෝවන්!</b><br>
+    බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට <b>BC-Scholar</b> ඩිජිටල් පද්ධතිය ඔබට උදව් වනු ඇත.<br><br>
+    <b>ගුරු මෙහෙයවීම :මචං, නියමයි! ඔන්න අපි කලින් Generate කරගත්ත, Copyright ප්‍රශ්න නැති, ලස්සන AI Images 5 ම (Background එකත් ඇතුළුව) ඔයා දුන්න Code එකට මම සෙට් කළා.
+
+දැන් App එකේ පෙනුම සම්පූර්ණයෙන්ම Professional සහ අධ්‍යාත්මික ගතියකින් යුක්තයි.
+
+මෙන්න පින්තූර ටික සෙට් කරපු අලුත්ම Code එක:
+
+```python
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+from datetime import datetime
+import urllib.parse
+
+# --- 1. පින්තූර ලින්ක්ස් (AI Generated) ---
+# මුල් පිටුවේ පින්තූරය (හිමිනම සහ ශිෂ්‍යයා)
+img_home_url = "[https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_0.png](https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_0.png)"
+# ලියාපදිංචි පෝරමයට ඉහළින් පින්තූරය (දොරටුව සහ නෙළුම් පොකුණ)
+img_reg_url = "[https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_2.png](https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_2.png)"
+# සිතියමට ඉහළින් පින්තූරය (රන්වන් ධර්මචක්‍රය සහිත සිතියම)
+img_map_url = "[https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_4.png](https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_4.png)"
+# පන්ති ටැබ් එකට ඉහළින් පින්තූරය (මණ්ඩපයේ Laptop එකක්)
+img_class_url = "[https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_6.png](https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_6.png)"
+# පසුබිම් පින්තූරය (බුදුරජාණන් වහන්සේගේ රැස් වළල්ල සහිත)
+img_back_url = "[https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_10.png](https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_10.png)"
+
+# --- 2. පිටුවේ මූලික සැකසුම් ---
+icon_url = "[https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0=](https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0=)"
+st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
+
+# --- 3. WhatsApp Group Links ---
+WHATSAPP_GROUPS = {
+    "2026 A/L": "[https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f](https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f)",
+    "2027 A/L": "[https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f](https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f)",
+    "2028 A/L": "[https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK](https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK)"
+}
+
+# --- 4. දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා) ---
+DISTRICT_DATA = {
+    "කොළඹ": {"lat": 6.9271, "lon": 79.8612}, "මහනුවර": {"lat": 7.2906, "lon": 80.6337},
+    "ගාල්ල": {"lat": 6.0535, "lon": 80.2210}, "මාතර": {"lat": 5.9549, "lon": 80.5550},
+    "කුරුණෑගල": {"lat": 7.4863, "lon": 80.3647}, "අනුරාධපුර": {"lat": 8.3114, "lon": 80.4037},
+    "රත්නපුර": {"lat": 6.7056, "lon": 80.3847}, "කළුතර": {"lat": 6.5854, "lon": 79.9607},
+    "බදුල්ල": {"lat": 6.9934, "lon": 81.0550}, "නුවරඑළිය": {"lat": 6.9497, "lon": 80.7891},
+    "හම්බන්තොට": {"lat": 6.1246, "lon": 81.1185}, "පුත්තලම": {"lat": 8.0330, "lon": 79.8250},
+    "කෑගල්ල": {"lat": 7.2513, "lon": 80.3464}, "මාතලේ": {"lat": 7.4675, "lon": 80.6234},
+    "පොළොන්නරුව": {"lat": 7.9397, "lon": 81.0036}, "මොනරාගල": {"lat": 6.8724, "lon": 81.3507},
+    "අම්පාර": {"lat": 7.2842, "lon": 81.6747}, "ත්‍රිකුණාමලය": {"lat": 8.5711, "lon": 81.2335},
+    "මඩකලපුව": {"lat": 7.7302, "lon": 81.6747}, "වවුනියාව": {"lat": 8.7542, "lon": 80.4982},
+    "මන්නාරම": {"lat": 8.9810, "lon": 79.9044}, "මුලතිවු": {"lat": 9.2671, "lon": 80.8142},
+    "කිලිනොච්චිය": {"lat": 9.3803, "lon": 80.4037}, "යාපනය": {"lat": 9.6615, "lon": 80.0255}
+}
+
+# --- 5. Google Sheet Connection ---
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# --- 6. CSS (Design & Styles) ---
+st.markdown(f"""
+    <style>
+    @import url('[https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap](https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap)');
+    
+    /* මුළු App එකේම Background එක (AI Generated Image එක සමඟ) */
+    .stApp {{
+        background: linear-gradient(rgba(255, 249, 230, 0.9), rgba(255, 249, 230, 0.9)), 
+                    url("{img_back_url}");
+        background-size: cover;
+        background-attachment: fixed;
+    }}
+
+    /* ප්‍රධාන මාතෘකාව (BC-Scholar) */
+    .main-title {{
+        font-family: 'Kotta One', serif;
+        color: #800000;
+        text-align: center;
+        font-size: clamp(35px, 8vw, 65px);
+        font-weight: bold;
+        margin-top: -20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }}
+
+    /* උප මාතෘකාව */
+    .sub-title {{
+        font-family: 'Yaldevi', sans-serif;
+        color: #e67e22;
+        text-align: center;
+        font-size: clamp(16px, 4vw, 24px);
+        font-weight: bold;
+        margin-bottom: 30px;
+    }}
+
+    /* සිංහල අකුරු ස්ටයිල් */
+    .stMarkdown, p, label, .stSelectbox, .stTextInput {{
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 500 !important;
+        color: #4b2c20 !important;
+    }}
+
+    /* Tabs (මුල් පිටුව, ලියාපදිංචිය) */
+    .stTabs [data-baseweb="tab-list"] {{
+        justify-content: center;
+    }}
+    .stTabs [data-baseweb="tab"] {{
+        background-color: rgba(253, 242, 233, 0.9);
+        border-radius: 10px 10px 0px 0px;
+        padding: 10px 15px;
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 700 !important;
+    }}
+
+    /* බොත්තම් (Buttons) */
+    .stButton>button {{
+        width: 100%;
+        font-family: 'Yaldevi', sans-serif !important;
+        background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
+        color: white;
+        border-radius: 15px;
+        height: 55px;
+        font-weight: 700 !important;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    }}
+    
+    .stButton>button:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }}
+
+    /* පින්තූර මැදට ගැනීම සහ Shadow */
+    .centered-image {{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }}
+    
+    img {{
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 7. Header Section ---
+st.markdown(f'<div class="centered-image"><img src="{icon_url}" width="70"></div>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
+
+# --- 8. Navigation Tabs ---
+menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
+
+with menu[0]:
+    st.image(img_home_url, use_container_width=True)
+    st.markdown("""
+    <div style='font-family: "Yaldevi", sans-serif; font-size: 18px;'>
+    <br><b>ආයුබෝවන්!</b><br>
+    බෞද්ධ ශිෂ්ටාචාරය විෂය ඉතාමත් සරලව සහ ක්‍රමානුකූලව ඉගෙන ගැනීමට <b>BC-Scholar</b> ඩිජිටල් පද්ධතිය ඔබට උදව් වනු ඇත.<br><br>
+    <b>ගුරු මෙහෙයවීම :</b><br>
+    <b>බුද්ධික සම්පත්මචං, නියමයි! ඔන්න අපි කලින් Generate කරගත්ත, Copyright ප්‍රශ්න නැති, ලස්සන AI Images 5 ම (Background එකත් ඇතුළුව) ඔයා දුන්න Code එකට මම සෙට් කළා.
+
+දැන් App එකේ පෙනුම සම්පූර්ණයෙන්ම Professional සහ අධ්‍යාත්මික ගතියකින් යුක්තයි.
+
+මෙන්න පින්තූර ටික සෙට් කරපු අලුත්ම Code එක:
+
+```python
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+from datetime import datetime
+import urllib.parse
+
+# --- 1. පින්තූර ලින්ක්ස් (AI Generated) ---
+# මුල් පිටුවේ පින්තූරය (හිමිනම සහ ශිෂ්‍යයා)
+img_home_url = "https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_0.png"
+# ලියාපදිංචි පෝරමයට ඉහළින් පින්තූරය (දොරටුව සහ නෙළුම් පොකුණ)
+img_reg_url = "https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_2.png"
+# සිතියමට ඉහළින් පින්තූරය (රන්වන් ධර්මචක්‍රය සහිත සිතියම)
+img_map_url = "https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_4.png"
+# පන්ති ටැබ් එකට ඉහළින් පින්තූරය (මණ්ඩපයේ Laptop එකක්)
+img_class_url = "https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_6.png"
+# පසුබිම් පින්තූරය (බුදුරජාණන් වහන්සේගේ රැස් වළල්ල සහිත)
+img_back_url = "https://raw.githubusercontent.com/B-Buddika/BC-Scholar-Assets/main/image_10.png"
+
+# --- 2. පිටුවේ මූලික සැකසුම් ---
+icon_url = "https://media.istockphoto.com/id/1455197782/vector/red-dharmachakra-wheel-of-dhamma-on-lotus-petals-sign-on-yellow-background-vector-design.jpg?s=612x612&w=0&k=20&c=eywlzFMds0xQEgg9FKSnIMcjDIgq4bsV5VysnZmc2d0="
+st.set_page_config(page_title="BC-Scholar", page_icon=icon_url, layout="centered")
+
+# --- 3. WhatsApp Group Links ---
+WHATSAPP_GROUPS = {
+    "2026 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
+    "2027 A/L": "https://chat.whatsapp.com/ElrGd68bvXDGEYw5XBEb1f",
+    "2028 A/L": "https://chat.whatsapp.com/JZdWvJT6gX6J0uqUFNvTuK"
+}
+
+# --- 4. දිස්ත්‍රික්ක වල ඛණ්ඩාංක (Map එක සඳහා) ---
+DISTRICT_DATA = {
+    "කොළඹ": {"lat": 6.9271, "lon": 79.8612}, "මහනුවර": {"lat": 7.2906, "lon": 80.6337},
+    "ගාල්ල": {"lat": 6.0535, "lon": 80.2210}, "මාතර": {"lat": 5.9549, "lon": 80.5550},
+    "කුරුණෑගල": {"lat": 7.4863, "lon": 80.3647}, "අනුරාධපුර": {"lat": 8.3114, "lon": 80.4037},
+    "රත්නපුර": {"lat": 6.7056, "lon": 80.3847}, "කළුතර": {"lat": 6.5854, "lon": 79.9607},
+    "බදුල්ල": {"lat": 6.9934, "lon": 81.0550}, "නුවරඑළිය": {"lat": 6.9497, "lon": 80.7891},
+    "හම්බන්තොට": {"lat": 6.1246, "lon": 81.1185}, "පුත්තලම": {"lat": 8.0330, "lon": 79.8250},
+    "කෑගල්ල": {"lat": 7.2513, "lon": 80.3464}, "මාතලේ": {"lat": 7.4675, "lon": 80.6234},
+    "පොළොන්නරුව": {"lat": 7.9397, "lon": 81.0036}, "මොනරාගල": {"lat": 6.8724, "lon": 81.3507},
+    "අම්පාර": {"lat": 7.2842, "lon": 81.6747}, "ත්‍රිකුණාමලය": {"lat": 8.5711, "lon": 81.2335},
+    "මඩකලපුව": {"lat": 7.7302, "lon": 81.6747}, "වවුනියාව": {"lat": 8.7542, "lon": 80.4982},
+    "මන්නාරම": {"lat": 8.9810, "lon": 79.9044}, "මුලතිවු": {"lat": 9.2671, "lon": 80.8142},
+    "කිලිනොච්චිය": {"lat": 9.3803, "lon": 80.4037}, "යාපනය": {"lat": 9.6615, "lon": 80.0255}
+}
+
+# --- 5. Google Sheet Connection ---
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# --- 6. CSS (Design & Styles) ---
+st.markdown(f"""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kotta+One&family=Yaldevi:wght@300;500;700&display=swap');
+    
+    /* මුළු App එකේම Background එක (AI Generated Image එක සමඟ) */
+    .stApp {{
+        background: linear-gradient(rgba(255, 249, 230, 0.9), rgba(255, 249, 230, 0.9)), 
+                    url("{img_back_url}");
+        background-size: cover;
+        background-attachment: fixed;
+    }}
+
+    /* ප්‍රධාන මාතෘකාව (BC-Scholar) */
+    .main-title {{
+        font-family: 'Kotta One', serif;
+        color: #800000;
+        text-align: center;
+        font-size: clamp(35px, 8vw, 65px);
+        font-weight: bold;
+        margin-top: -20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }}
+
+    /* උප මාතෘකාව */
+    .sub-title {{
+        font-family: 'Yaldevi', sans-serif;
+        color: #e67e22;
+        text-align: center;
+        font-size: clamp(16px, 4vw, 24px);
+        font-weight: bold;
+        margin-bottom: 30px;
+    }}
+
+    /* සිංහල අකුරු ස්ටයිල් */
+    .stMarkdown, p, label, .stSelectbox, .stTextInput {{
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 500 !important;
+        color: #4b2c20 !important;
+    }}
+
+    /* Tabs (මුල් පිටුව, ලියාපදිංචිය) */
+    .stTabs [data-baseweb="tab-list"] {{
+        justify-content: center;
+    }}
+    .stTabs [data-baseweb="tab"] {{
+        background-color: rgba(253, 242, 233, 0.9);
+        border-radius: 10px 10px 0px 0px;
+        padding: 10px 15px;
+        font-family: 'Yaldevi', sans-serif !important;
+        font-weight: 700 !important;
+    }}
+
+    /* බොත්තම් (Buttons) */
+    .stButton>button {{
+        width: 100%;
+        font-family: 'Yaldevi', sans-serif !important;
+        background: linear-gradient(90deg, #800000 0%, #a52a2a 100%);
+        color: white;
+        border-radius: 15px;
+        height: 55px;
+        font-weight: 700 !important;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    }}
+    
+    .stButton>button:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }}
+
+    /* පින්තූර මැදට ගැනීම සහ Shadow */
+    .centered-image {{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }}
+    
+    img {{
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 7. Header Section ---
+st.markdown(f'<div class="centered-image"><img src="{icon_url}" width="70"></div>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">BC-Scholar</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">බෞද්ධ ශිෂ්ටාචාරය - අලුත් ගමනක ඇරඹුම...!</p>', unsafe_allow_html=True)
+
+# --- 8. Navigation Tabs ---
+menu = st.tabs(["🏠 මුල් පිටුව", "📝 ලියාපදිංචිය", "📊 ශිෂ්‍ය සිතියම", "📚 නිබන්ධන", "🎥 පන්ති"])
+
+with menu[0]:
+    st.image(img_home_url, use_container_width=True)
     st.markdown("""
     <div style='font-family: "Yaldevi", sans-serif; font-size: 18px;'>
     <br><b>ආයුබෝවන්!</b><br>
@@ -128,11 +463,13 @@ with menu[0]:
     </div>
     """, unsafe_allow_html=True)
     
+    # Contact Teacher
     contact_msg = urllib.parse.quote("ආයුබෝවන් සර්, මට පන්ති පිළිබඳ විස්තර දැනගැනීමට අවශ්‍යයි.")
     st.link_button("📞 Contact Teacher (WhatsApp)", f"https://wa.me/94779316692?text={contact_msg}")
 
 with menu[1]:
-    st.image("https://khiri.com/wp-content/uploads/2023/03/SLFeb23-Sigiriya-10.jpg", use_container_width=True)
+    # Registration Image එක මෙතනට සෙට් කළා
+    st.image(img_reg_url, use_container_width=True)
     st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>නව ශිෂ්‍ය ලියාපදිංචිය</h3>", unsafe_allow_html=True)
     
     with st.form("registration_form", clear_on_submit=True):
@@ -158,9 +495,11 @@ with menu[1]:
                     st.balloons()
                     st.success(f"ස්තූතියි {name}! ඔබ සාර්ථකව ලියාපදිංචි වුණා.")
                     
+                    # බැච් එකට අදාළ WhatsApp Group එක පෙන්වීම
                     st.markdown(f"<div style='font-family: \"Yaldevi\", sans-serif;'><h4>✅ දැන් පහත බටන් එකෙන් ඔබේ {batch_selection} සමූහයට එකතු වන්න:</h4></div>", unsafe_allow_html=True)
                     st.link_button(f"Join {batch_selection} WhatsApp Group", WHATSAPP_GROUPS[batch_selection])
                     
+                    # Contact Card එක Download කිරීමට දීම
                     vcf_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name} BC\nTEL;TYPE=CELL:{phone}\nEND:VCARD"
                     st.download_button(label="📥 Contact එක Save කරගන්න", data=vcf_data, file_name=f"{name}_BC.vcf", mime="text/vcard")
                 except:
@@ -169,7 +508,8 @@ with menu[1]:
                 st.warning("කරුණාකර සියලු විස්තර සම්පූර්ණ කරන්න.")
 
 with menu[2]:
-    st.image("https://th.bing.com/th/id/R.e22f34a07b8c8586a30e1a89fb7cc4bb?rik=Dy2JkwTUd4EkVw&pid=ImgRaw&r=0", use_container_width=True)
+    # Map Image එක මෙතනට සෙට් කළා
+    st.image(img_map_url, use_container_width=True)
     st.markdown("<h3 style='color: #800000; text-align: center; font-family: \"Yaldevi\", sans-serif;'>ශිෂ්‍ය ව්‍යාප්තිය</h3>", unsafe_allow_html=True)
     try:
         data = conn.read(ttl=0)
@@ -184,8 +524,12 @@ with menu[3]:
     if pw == "BC123":
         st.success("Access Granted!")
         st.link_button("Download Tutes (Google Drive)", "https://drive.google.com/drive/folders/1MoGZVGhnEvv-sBwwivd9mIeU-Tybu8uL?usp=drive_link")
+    elif pw != "":
+        st.error("මුරපදය වැරදියි! කරුණාකර නිවැරදි මුරපදය ඇතුළත් කරන්න.")
 
 with menu[4]:
+    # Class Image එක මෙතනට සෙට් කළා
+    st.image(img_class_url, use_container_width=True)
     st.markdown("<div style='font-family: \"Yaldevi\", sans-serif;'><h3>🎥 සජීවී Zoom පන්ති</h3></div>", unsafe_allow_html=True)
     st.info("පන්තිය ආරම්භ වීමට නියමිත වේලාවට පහත බොත්තම භාවිතා කරන්න.")
     st.link_button("සජීවී Zoom පන්තියට මෙතනින්", "https://zoom.us")
